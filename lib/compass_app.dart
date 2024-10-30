@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
@@ -126,7 +125,7 @@ class _CompassAppState extends State<CompassApp> {
                             BoxShadow(
                               color: Colors.grey.shade500,
                               blurRadius: 5,
-                              offset: Offset(10, 10),
+                              offset: const Offset(10, 10),
                             ),
                           ],
                         ),
@@ -141,7 +140,7 @@ class _CompassAppState extends State<CompassApp> {
                             BoxShadow(
                               color: Colors.grey.shade500,
                               blurRadius: 5,
-                              offset: Offset(10, 10),
+                              offset: const Offset(10, 10),
                             ),
                           ],
                         ),
