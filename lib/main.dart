@@ -1,6 +1,7 @@
-import 'package:compass/compass_app.dart';
-import 'package:compass/core/global/theme/theme_data/theme_data_light.dart';
 import 'package:flutter/material.dart';
+
+import 'compass_app.dart';
+import 'core/global/theme/theme_data/theme_data_light.dart';
 
 void main() {
   runApp(const MyApp());
