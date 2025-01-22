@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:flutter_compass_app/widgets/compass_view_painter.dart';
 import 'package:flutter_compass_app/widgets/neumorphism.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 
 import 'core/global/theme/app_colors/app_colors_light.dart';
 
@@ -18,6 +19,7 @@ class _CompassAppState extends State<CompassApp> {
   int updateCount = 0;
   int lastUpdateTime = DateTime.now().millisecondsSinceEpoch;
   double avgUpdateInterval = 0.0;
+  int magnetometer = 0;
 
   double headingToDegree(double heading) {
     return heading < 0 ? 360 - heading.abs() : heading;
@@ -36,6 +38,15 @@ class _CompassAppState extends State<CompassApp> {
         _updateSensorEfficiency();
       });
     });
+
+    Sensors().magnetometerEventStream().listen(
+      (event) {
+        setState(() {
+          magnetometer = event.x.toInt();
+          _updateSensorEfficiency();
+        });
+      },
+    );
   }
 
   void _updateSensorEfficiency() {
@@ -63,94 +74,104 @@ class _CompassAppState extends State<CompassApp> {
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: StreamBuilder<CompassEvent>(
-          stream: FlutterCompass.events,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return const Text("Error reading heading");
-            }
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
-            direction = snapshot.data?.heading;
-
-            if (direction == null) {
-              return const Text("Device does not have sensor");
-            }
-
-            final adjustedDirection = headingToDegree(direction!);
-            return Stack(
-              children: [
-                Positioned.fill(
-                  top: size.height * 0.1,
-                  child: Text(
-                    "Sensor Efficiency: ${getSensorEfficiencyStatus()}",
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: getSensorEfficiencyStatus() == "Good"
-                          ? Colors.green
-                          : getSensorEfficiencyStatus() == "Moderate"
-                              ? Colors.orange
-                              : Colors.red,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                Neumorphism(
-                  margin: EdgeInsets.all(size.width * 0.1),
-                  padding: const EdgeInsets.all(10.0),
-                  child: Transform.rotate(
-                    angle: degreesToRadians(adjustedDirection * -1),
-                    child: CustomPaint(
-                      size: size,
-                      painter: CompassViewPainter(color: AppColorsLight.grey),
-                    ),
-                  ),
-                ),
-                CenterDisplayMeter(
-                  direction: adjustedDirection,
-                ),
-                Positioned.fill(
-                  top: size.height * 0.28,
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade500,
-                              blurRadius: 5,
-                              offset: const Offset(10, 10),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Container(
-                        width: 5,
-                        height: size.width * 0.21,
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.shade500,
-                              blurRadius: 5,
-                              offset: const Offset(10, 10),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+        stream: FlutterCompass.events,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return const Text("Error reading heading");
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          }),
+          }
+
+          direction = snapshot.data?.heading;
+
+          if (direction == null) {
+            return const Text("Device does not have sensor");
+          }
+
+          final adjustedDirection = headingToDegree(direction!);
+          return Stack(
+            children: [
+              Neumorphism(
+                margin: EdgeInsets.all(size.width * 0.1),
+                padding: const EdgeInsets.all(10.0),
+                child: Transform.rotate(
+                  angle: degreesToRadians(adjustedDirection * -1),
+                  child: CustomPaint(
+                    size: size,
+                    painter: CompassViewPainter(color: AppColorsLight.grey),
+                  ),
+                ),
+              ),
+              CenterDisplayMeter(
+                direction: adjustedDirection,
+              ),
+              Positioned.fill(
+                top: size.height * 0.28,
+                child: Column(
+                  children: [
+                    Container(
+                      width: 10,
+                      height: 10,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade500,
+                            blurRadius: 5,
+                            offset: const Offset(10, 10),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: 5,
+                      height: size.width * 0.21,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade500,
+                            blurRadius: 5,
+                            offset: const Offset(10, 10),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Positioned(
+                left: size.width * 0.05,
+                bottom: size.height * 0.03,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('Magnetometer: $magnetometer µT'),
+                    const SizedBox(width: 4.0),
+                    IconButton(
+                      iconSize: 24.0,
+                      onPressed: () {},
+                      padding: EdgeInsets.zero,
+                      constraints: BoxConstraints(),
+                      style: const ButtonStyle(
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      icon: Icon(
+                        Icons.info_outline,
+                      ),
+                      color: const Color(0xFFD93636),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
