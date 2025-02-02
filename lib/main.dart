@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_compass_app/core/global/theme/theme_data/theme_data_dark.dart';
 
 import 'compass_app.dart';
-import 'core/global/theme/theme_data/theme_data_light.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,8 +13,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: themeDataLight,
+      title: 'Flutter Compass Application',
+      theme: themeDataLDark,
       debugShowCheckedModeBanner: false,
       home: const CompassApp(),
     );
