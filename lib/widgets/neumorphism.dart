@@ -33,7 +33,7 @@ class Neumorphism extends StatelessWidget {
         boxShadow: isReverse
             ? [
                 BoxShadow(
-                  color: AppColorsLight.primaryDarkColor,
+                  color: AppColorsLight.white,
                   blurRadius: blur,
                   offset: Offset(-distance, -distance),
                 ),
@@ -50,7 +50,7 @@ class Neumorphism extends StatelessWidget {
                   offset: Offset(-distance, -distance),
                 ),
                 BoxShadow(
-                  color: AppColorsLight.primaryDarkColor,
+                  color: AppColorsLight.white,
                   blurRadius: blur,
                   offset: Offset(distance, distance),
                 ),
@@ -84,7 +84,7 @@ class TopGradientContainer extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            AppColorsLight.primaryDarkColor,
+            AppColorsLight.white,
             AppColorsLight.white,
           ],
         ),
