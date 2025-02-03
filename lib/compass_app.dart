@@ -5,6 +5,7 @@ import 'package:flutter_compass_app/widgets/compass_view_painter.dart';
 import 'package:flutter_compass_app/widgets/custom_app_bar.dart';
 import 'package:flutter_compass_app/widgets/custom_drawer.dart';
 import 'package:flutter_compass_app/widgets/neumorphism.dart';
+import 'package:flutter_compass_app/widgets/painters/compass_value_painter.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 
 import 'core/global/theme/app_colors/app_colors_light.dart';
@@ -59,16 +60,6 @@ class _CompassAppState extends State<CompassApp> {
     updateCount++;
     avgUpdateInterval =
         ((avgUpdateInterval * (updateCount - 1)) + interval) / updateCount;
-  }
-
-  String getSensorEfficiencyStatus() {
-    if (avgUpdateInterval < 100) {
-      return "Good";
-    } else if (avgUpdateInterval < 300) {
-      return "Moderate";
-    } else {
-      return "Poor";
-    }
   }
 
   @override
@@ -179,11 +170,15 @@ class _CompassAppState extends State<CompassApp> {
                 ),
                 const SizedBox(height: 64.0),
                 Container(
-                  width: 320.0,
-                  height: 320.0,
+                  width: 300.0,
+                  height: 300.0,
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     color: Colors.grey,
+                  ),
+                  child: CustomPaint(
+                    size: size,
+                    painter: CompassValuePainter(),
                   ),
                 ),
                 const SizedBox(height: 64.0),
@@ -202,6 +197,7 @@ class _CompassAppState extends State<CompassApp> {
                           '°',
                           style: TextStyle(
                             fontSize: 24.0,
+                            color: Theme.of(context).colorScheme.primary,
                           ),
                         ),
                         Text(
