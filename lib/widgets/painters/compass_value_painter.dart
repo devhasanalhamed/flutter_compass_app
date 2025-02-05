@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class CompassValuePainter extends CustomPainter {
@@ -17,6 +19,18 @@ class CompassValuePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+
+
+  List<double> layoutScale(int visuals) {
+    final scale = 360 / visuals;
+    return List.generate(visuals, (index) => index * scale);
+  }
+
+  double correctAngle(double angle) => angle - 90;
 }
 
 typedef CardinalityMap = Map<num, String>;
+
+extension on num {
+  double toRadians() => this * pi / 180;
+}
