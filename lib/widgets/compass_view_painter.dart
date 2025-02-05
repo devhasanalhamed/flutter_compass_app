@@ -167,6 +167,7 @@ class CompassViewPainter extends CustomPainter {
     return false;
   }
 
+
   List<double> _layoutScale(int ticks) {
     final scale = 360 / ticks;
     return List.generate(ticks, (index) => index * scale);
